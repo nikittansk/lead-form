@@ -23,7 +23,7 @@
 import axios from 'axios';
 
   export default {
-    name: 'LeadList',
+    name: 'LeadsList',
     data () {
       return {
         leads: [],
@@ -36,15 +36,35 @@ import axios from 'axios';
     methods: {
       async getLeads() {
         try {
-          await axios.get('/api/leads')
-            .then(response => this.leads = response.data.leads);
+          const response = await axios.get('/api/leads', {
+          params: {
+            city: this.filter.city
+            }
+          });
+          this.leads = response.data.leads;
         } catch (error) {
           console.log("Не удалось получить список leads:", error);
         }
       },
   
-      exportLeads() {
-        
+      async exportLeads() {
+        try {
+          const response = await axios.get('/api/export', {
+            params: {
+              city: this.filter.city
+            },
+            responseType: 'blob'
+          });
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', 'leads.csv');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } catch (error) {
+          console.error('Ошибка при экспорте leads:', error);
+        }
       }
     },
     mounted() {
