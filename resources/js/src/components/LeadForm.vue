@@ -3,7 +3,7 @@
       <form @submit.prevent="submitLead">
           <div class="form-group">
               <label>ФИО:</label>
-              <input v-model="name" type="text" equired>
+              <input v-model="name" type="text" required>
           </div>
           <div class="form-group">
               <label>Email:</label>
@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'LeadForm',
   data () {
@@ -39,8 +41,20 @@ export default {
     }
   },
   methods: {
-    submitLead() {
-      console.log(this.name)
+    async submitLead() {
+      await axios.post('/api/leads', {
+        name: this.name,
+        email: this.email,
+        phone: this.phone,
+        city: this.city
+      })
+        .then(response => {
+          if (!response.data.message) {
+            this.$router.push({ path: '/leads' });
+          } else {
+            this.message = response.data.message;
+          }
+        })
     }
   }
 }

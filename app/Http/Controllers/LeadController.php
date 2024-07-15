@@ -2,20 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Lead;
+use App\Http\Requests\CreateLeadRequest;
 
 
 class LeadController extends Controller
 {
-    function index()
+    function index(): array
     {
         $leads = Lead::all();
-        return view('leads.index', ['leads' => $leads]);
+        return [
+            'leads' => $leads
+        ];
     }
 
-    function create()
+    function create(CreateLeadRequest $request): array
     {
-        dump(request()->input());
+        $lead = Lead::query()->create($request->validated());
+        return [
+            'lead' => $lead
+        ];
     }
 
     function exportCSV() 

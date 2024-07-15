@@ -2,7 +2,7 @@
     <div class="list-container">
         <div class="filter">
             <label>Фильтр по городу:</label>
-            <select v-model="filterCity" @change="getLeads">
+            <select v-model="filter.city" @change="getLeads">
                 <option value="">Все города</option>
                 <option v-for="city in cities" :key="city" :value="city">{{ city }}</option>
             </select>
@@ -20,30 +20,35 @@
   </template>
   
   <script>
+import axios from 'axios';
+
   export default {
     name: 'LeadList',
     data () {
       return {
-        leads: [
-          {
-            name: 'Nikita',
-            email: 'test@mail.ru',
-            phone: '89293232323',
-            city: 'Тула'
-          }
-        ],
-        filterCity: '',
+        leads: [],
+        filter: {
+          city: ''
+        },
         cities: ['Москва', 'Санкт-Петербург', 'Тула']
       }
     },
     methods: {
-      getLeads() {
-        console.log(this.filterCity)
+      async getLeads() {
+        try {
+          await axios.get('/api/leads')
+            .then(response => this.leads = response.data.leads);
+        } catch (error) {
+          console.log("Не удалось получить список leads:", error);
+        }
       },
   
       exportLeads() {
         
       }
+    },
+    mounted() {
+      this.getLeads();
     }
   }
   </script>
