@@ -18,7 +18,7 @@ class CreateLeadRequest extends FormRequest
                 'max:255',
                 'unique:leads,email',
             ],
-            'phone' => ['required', 'string', 'size:10'],
+            'phone' => ['required', 'string', 'size:12'],
             'city' => [
                 'required',
                 'string',

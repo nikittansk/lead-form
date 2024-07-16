@@ -17,9 +17,9 @@
         </ul>
         <button @click="exportLeads">Экспорт в CSV</button>
     </div>
-  </template>
+</template>
   
-  <script>
+<script>
 import axios from 'axios';
 
   export default {
@@ -71,51 +71,61 @@ import axios from 'axios';
       this.getLeads();
     }
   }
-  </script>
+</script>
   
-  <style scoped>
+<style scoped>
   .list-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
-  
+
   .filter {
     margin-bottom: 20px;
   }
-  
+
   label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
   }
-  
+
   select {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
   }
-  
+
   .lead-list {
     list-style: none;
     padding: 0;
   }
-  
+
   .lead-item {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     padding: 10px;
     background-color: #fff;
     border-bottom: 1px solid #ddd;
+    height: 50px;
   }
-  
+
   .lead-item:nth-child(even) {
     background-color: #f1f1f1;
   }
-  
+
+  .lead-item span {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-right: 10px; /* Фиксированное расстояние между колонками */
+  }
+
   button {
     padding: 10px 20px;
     background-color: #007bff;
@@ -125,8 +135,8 @@ import axios from 'axios';
     cursor: pointer;
     margin-top: 20px;
   }
-  
+
   button:hover {
     background-color: #0056b3;
   }
-  </style>
+</style>

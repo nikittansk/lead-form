@@ -44,15 +44,7 @@ composer install
 cp .env.example .env
 ```
 
-### 4. Установите Laravel Sail
-
-Если Laravel Sail еще не установлен, добавьте его как зависимость для разработки:
-
-```sh
-composer require laravel/sail --dev
-```
-
-### 5. Запустите Docker-контейнеры
+### 4. Запустите Docker-контейнеры
 
 Запустите Docker-контейнеры, используя Sail:
 
@@ -66,12 +58,20 @@ composer require laravel/sail --dev
 ./vendor/bin/sail down
 ```
 
-### 6. Запустите миграции базы данных
+### 5. Запустите миграции базы данных
 
 Для применения миграций выполните команду:
 
 ```sh
 ./vendor/bin/sail artisan migrate
+```
+
+### 6. Команда для запуска фронта
+
+После запуска Sail, выполните следующую команду для сборки и запуска frontend через Vite:
+
+```sh
+./vendor/bin/sail npm run dev
 ```
 
 ### 7. Доступ к приложению
