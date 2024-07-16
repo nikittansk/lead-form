@@ -14,5 +14,6 @@ class Lead extends Model
         'email',
         'phone',
         'city',
+        'ip_address',
     ];
 }

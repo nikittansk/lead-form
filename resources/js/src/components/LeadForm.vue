@@ -20,7 +20,8 @@
               </select>
           </div>
           <button type="submit">Отправить</button>
-          <div v-if="message" :class="messageClass">{{ message }}</div>
+          <div v-if="message && !isFormBlocked" :class="messageClass">{{ message }}</div>
+          <div v-if="isFormBlocked" class="message-error">{{ message }}</div>
       </form>
   </div>
 </template>
@@ -39,7 +40,8 @@ export default {
         city: '',
       },
       message: '',
-      cities: ['Москва', 'Санкт-Петербург', 'Тула']
+      cities: ['Москва', 'Санкт-Петербург', 'Тула'],
+      isFormBlocked: false,
     }
   },
   computed: {
@@ -65,8 +67,13 @@ export default {
           this.message = response.data.message;
         }
       } catch (error) {
-        this.message = "Ошибка при отправке данных";
-      }
+          if (error.response.data.blocked) {
+            this.isFormBlocked = true;
+            this.message = error.response.data.message;
+          } else {
+            this.message = `Ошибка при отправке данных: ${error.message}`;
+          }
+        }
     },
   }
 }

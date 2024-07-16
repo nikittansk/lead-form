@@ -18,9 +18,29 @@ class LeadController extends Controller
         ];
     }
 
-    function create(CreateLeadRequest $request): array
+    function create(CreateLeadRequest $request)
     {
-        $lead = Lead::query()->create($request->validated());
+        $ip = $request->ip();
+        $count = Lead::query()
+                    ->where('ip_address', $ip)
+                    ->where('created_at', '>=', now()->subHour())
+                    ->count();
+
+        if ($count >= 5) {
+            return response()->json([
+                'message' => 'Форма заблокирована на 2 часа из-за множественных отправок с вашего IP.',
+                'blocked' => true
+            ], 403);
+        }
+
+        $lead = Lead::query()->create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'phone' => $request->input('phone'),
+            'city' => $request->input('city'),
+            'ip_address' => $ip,
+        ]);
+
         return [
             'lead' => $lead
         ];
