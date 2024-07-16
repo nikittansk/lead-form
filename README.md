@@ -19,7 +19,7 @@
 Если у вас еще нет локальной копии проекта, клонируйте его с помощью Git:
 
 ```sh
-git clone https://github.com/nikittansk/lead-form.git
+git clone git@github.com:nikittansk/lead-form.git
 ```
 
 Перейдите в директорию проекта:
