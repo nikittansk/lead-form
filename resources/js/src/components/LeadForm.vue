@@ -1,26 +1,12 @@
 <template>
   <div class="form-container">
       <form @submit.prevent="submitLead">
-          <div class="form-group">
-              <label>ФИО:</label>
-              <input v-model="name" type="text" required>
-          </div>
-          <div class="form-group">
-              <label>Email:</label>
-              <input v-model="email" type="email" required>
-          </div>
-          <div class="form-group">
-              <label>Телефон:</label>
-              <input v-model="phone" type="tel" required>
-          </div>
-          <div class="form-group">
-              <label>Город:</label>
-              <select v-model="city" required>
-                  <option v-for="city in cities" :key="city" :value="city">{{ city }}</option>
-              </select>
+          <div class="form-group" v-for="field in fields" :key="field.label">
+            <label>{{ field.label }}</label>
+            <component :is="field.component" v-model="formData[field.model]" :type="field.type" :required="field.required"/>
           </div>
           <button type="submit">Отправить</button>
-          <div v-if="message" class="message">{{ message }}</div>
+          <div v-if="message" :class="messageClass">{{ message }}</div>
       </form>
   </div>
 </template>
@@ -32,29 +18,39 @@ export default {
   name: 'LeadForm',
   data () {
     return {
-      name: '',
-      email: '',
-      phone: '',
-      city: '',
+      formData: {
+        name: '',
+        email: '',
+        phone: '',
+        city: '',
+      },
       message: '',
-      cities: ['Москва', 'Санкт-Петербург', 'Тула']
+      cities: ['Москва', 'Санкт-Петербург', 'Тула'],
+      fields: [
+        { label: 'ФИО', component: 'input', model: 'name', type: 'text', required: true },
+        { label: 'Email', component: 'input', model: 'email', type: 'email', required: true },
+        { label: 'Телефон', component: 'input', model: 'phone', type: 'tel', required: true },
+        { label: 'Город', component: 'select', model: 'city', type: null, required: true }
+      ]
+    }
+  },
+  computed: {
+    messageClass() {
+      return this.message ? 'message-success' : 'message-error';
     }
   },
   methods: {
     async submitLead() {
-      await axios.post('/api/leads', {
-        name: this.name,
-        email: this.email,
-        phone: this.phone,
-        city: this.city
-      })
-        .then(response => {
-          if (!response.data.message) {
-            this.$router.push({ path: '/leads' });
-          } else {
-            this.message = response.data.message;
-          }
-        })
+      try {
+        const response = await axios.post('/api/leads', this.formData);
+        if (!response.data.message) {
+          this.$router.push({ path: '/leads' });
+        } else {
+          this.message = response.data.message;
+        }
+      } catch (error) {
+        this.message = 'Ошибка при отправке данных';
+      }
     }
   }
 }
@@ -99,11 +95,19 @@ button:hover {
   background-color: #0056b3;
 }
 
-.message {
+.message-success {
   margin-top: 15px;
   padding: 10px;
   background-color: #e0ffe0;
   border: 1px solid #b0ffb0;
+  border-radius: 4px;
+}
+
+.message-error {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #ffe0e0;
+  border: 1px solid #ffb0b0;
   border-radius: 4px;
 }
 </style>
